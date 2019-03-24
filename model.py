@@ -49,7 +49,7 @@ def home():
             list.append(character)
         for item in list:  
             fo.write("%s " %item)  
-    return render_template("home.html")
+    return render_template("index.html")
 
 
 UPLOAD_FOLDER = './images'
