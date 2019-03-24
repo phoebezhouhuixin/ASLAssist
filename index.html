@@ -22,6 +22,7 @@
       }
     </style>
 
+
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -30,8 +31,9 @@
     <![endif]-->
   </head>
   <body style="background-image:url('https://previews.123rf.com/images/jaboy/jaboy1501/jaboy150100281/35602313-cherry-blossom-tree.jpg'); background-repeat: no-repeat; background-position: right top; margin-right: 50px;">
-
-     
+  <script>
+     var str = getTextFromFile("message.txt", function(text))
+  </script>
 
     <div style="color:MediumSeaGreen; font-size:80px; text-align:center;" class="text-center well"><b>WebChat</b></div>
 
@@ -48,7 +50,7 @@
           <div class="clearfix" style="margin-top: 5px;"></div>
           <input style="width:50%; padding:12px 20px; margin:8px 0;box-sizing:border-box" type="text" class="username form-control" placeholder="User Name">
           <div style="padding-top: 5px;"></div>
-          <input style="width:50%; padding:12px 20px; margin:8px 0;box-sizing:border-box" type="text" class="message form-control" placeholder="Messages">
+          <input style="width:50%; padding:12px 20px; margin:8px 0;box-sizing:border-box" type="text" class="message form-control" placeholder="str">
           <div style="padding-top: 5px;"></div>
           <button style="background-color:lavender;padding: 15px 32px; font-size: 16px;margin: 4px 2px;" type="submit" class="btn btn-success btn-block"><span class="glyphicon glyphicon-send"></span> Send</button>
         </form>
@@ -60,23 +62,41 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
     <script>
+      function getTextFromFile(fileName,callBack)
+      {
+        var file = new XMLHttpRequest();
+        file.open("GET", fileName, false);
+        file.onreadystatechange = function ()
+        {
+            if(file.readyState === 4)
+            {
+                if(file.status === 200 || file.status == 0)
+                {
+                    var text = file.responseText;
+                    callBack(text);
+                }
+            }
+        }
+        file.send(text);
+      }
+
       var socket = io.connect( 'http://' + document.domain + ':' + location.port )
       // broadcast a message
       socket.on( 'connect', function() {
         socket.emit( 'my event', {
           data: 'User Connected'
         } )
-        var form = $( 'form' ).on( 'submit', function( e ) {
-          e.preventDefault()
-          let user_name = $( 'input.username' ).val()
-          let user_input = $( 'input.message' ).val()
-          socket.emit( 'my event', {
-            user_name : user_name,
-            message : user_input
-          } )
-          // empty the input field
-          $( 'input.message' ).val( '' ).focus()
+      var form = $( 'form' ).on( 'submit', function( e ) {
+        e.preventDefault()
+        let user_name = $( 'input.username' ).val()
+        let user_input = $('str').val
+        socket.emit( 'my event', {
+          user_name : user_name,
+          message : user_input
         } )
+        // empty the input field
+        $( 'input.message' ).val( '' ).focus()
+      
       } )
       // capture message
       socket.on( 'my response', function( msg ) {
