@@ -1,0 +1,45 @@
+# Note that this is a colab notebook, it shoule be run on a Google Colab
+
+from PIL import Image
+import numpy as np
+import matplotlib.pyplot as plt
+from google.colab import files
+import os
+
+#see the local file path
+#os.listdir("../ASL/")
+
+
+
+from keras.models import load_model
+#remember to upload the model to this notebook first
+model = load_model("my_model.h5")
+
+#See the testing data shape
+#Result is (200,200,3)
+
+#img = Image.open("asl-alphabet/asl_alphabet_test/A_test.jpg")
+#img = np.array(img)
+#img.shape
+
+
+def predict_img(): # takes in image name as string
+  
+  uploaded = files.upload()
+  imagename=''
+  
+  for fn in uploaded.keys():
+    imagename=fn
+  
+  img=Image.open(imagename)
+  img = img.convert('RGB')
+  img=img.resize((64,64))
+  img=np.array(img)
+  plt.imshow(img) # prints image
+  img = np.expand_dims(img, axis=0) # change the single image dimentsion from (64,64,3) to (1,64,64,3)
+ 
+
+  #img=img.reshape(1,-1)
+  print('Predicted value:',str(model.predict(img)[0]),end='\n') # prints prediction
+  
+  predict_img()
